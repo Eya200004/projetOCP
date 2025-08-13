@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Modifier l’équipement{% endblock %}
+
+{% block content %}
+<div class="container-table">
+    <h2>Modifier l’équipement</h2>
+
+    <form method="POST" class="form-style">
+        <label for="nom">Nom :</label>
+        <input type="text" id="nom" name="nom" value="{{ equipement.nom }}" required>
+
+        <label for="categorie">Catégorie :</label>
+        <input type="text" id="categorie" name="categorie" value="{{ equipement.categorie }}" required>
+
+        <label for="quantite">Quantité :</label>
+        <input type="number" id="quantite" name="quantite" value="{{ equipement.quantite }}" min="0" required>
+
+        <button type="submit">Modifier</button>
+    </form>
+
+    <a href="{{ url_for('afficher_equipements') }}" class="btn-return">Retour à la liste</a>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-table">
+    <h1>Liste des équipements</h1>
+    <a href="{{ url_for('formulaire_ajout') }}" class="btn-ajouter">Ajouter un équipement</a>
+    <a href="{{ url_for('page_prevision') }}" class="btn btn-ajouter">Prévision</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Catégorie</th>
+                <th>Quantité</th>
+                <th>Date d'ajout</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for eq in equipements %}
+            <tr>
+                <td>{{ eq.Equipement_id }}</td>
+                <td>{{ eq.nom }}</td>
+                <td>{{ eq.categorie }}</td>
+                <td>{{ eq.quantite }}</td>
+                <td>{{ eq.date_ajout }}</td>
+                <td class="actions">
+                    <a href="{{ url_for('modifier_equipement', equipement_id=eq.Equipement_id) }}">Modifier</a>
+                    <a href="{{ url_for('supprimer_equipement', equipement_id=eq.Equipement_id) }}" onclick="return confirm('Supprimer cet équipement ?');">Supprimer</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="no-data">Aucun équipement trouvé.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+

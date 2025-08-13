@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Accueil - Gestion de Stock OCP{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="hero-content">
+        <h1 class="headline-1">Optimisez, prévoyez, contrôlez</h1>
+        <h1 class="headline-2">Votre parc informatique</h1>
+        <p>Une plateforme intelligente pour suivre, prévoir et gérer votre matériel informatique au sein d'OCP.</p>
+        <a href="{{ url_for('ajouter_equipement') }}" class="btn-primary">Ajouter un équipement</a>
+    </div>
+</section>
+
+
+<section class="section">
+    <h2>Pourquoi cette plateforme ?</h2>
+    <p>
+        <strong> Gain de temps :</strong> Processus automatisé<br>
+        <strong> Moins d’erreurs :</strong> IA pour l’analyse des besoins<br>
+        <strong> Prévisions :</strong> Planification intelligente
+    </p>
+</section>
+
+<section class="section">
+    <h2>Fonctionnalités principales</h2>
+    <p>
+        • Suivi en temps réel des équipements<br>
+        • Alertes intelligentes sur les ruptures de stock<br>
+        • Rapports dynamiques pour prise de décision<br>
+        • Ajout & modification rapide du matériel
+    </p>
+</section>
+
+<section class="section">
+    <h2>Support et assistance</h2>
+    <p>Notre équipe IT est disponible pour toute demande de support technique ou d'évolution du système. Contactez-nous à : <strong>support-it@ocp.ma</strong></p>
+</section>
+{% endblock %}

@@ -1,0 +1,64 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Gestion de Stock IA{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="left-header">
+                <img src="/static/OCP.jpg" alt="Logo" class="logo">
+                <h1 class="header-title">Gestion de Stock IT</h1>
+            </div>
+    
+            <nav class="main-nav">
+        
+                <a href="/">Accueil</a>
+                <a href={{url_for('ajouter_equipement')}}>Ajouter un équipement</a>
+                <a href="{{ url_for('afficher_equipements') }}">Liste des équipements</a>
+
+            </nav>
+        </div>
+
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+             <div class="footer-about">
+                <h3>À propos d'OCP</h3>
+      <p>OCP est un leader mondial dans l'industrie des phosphates. Ce projet de gestion de stock intelligent est une initiative interne pour améliorer l'efficacité grâce à l'IA.</p>
+    </div>
+
+    <div class="footer-links">
+      <h3>Liens utiles</h3>
+      <ul>
+        <li><a href="/">Accueil</a></li>
+        <li><a href="{{ url_for('ajouter_equipement') }}">Ajouter équipement</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-social">
+      <h3>Suivez-nous</h3>
+      <div class="social-icons">
+        <a href="https://www.linkedin.com/company/ocpgroup/" target="_blank"><i class="fab fa-linkedin"></i></a>
+        <a href="https://twitter.com/OCPgroup" target="_blank"><i class="fab fa-twitter"></i></a>
+        <a href="https://www.facebook.com/OCPGroupMA" target="_blank"><i class="fab fa-facebook"></i></a>
+      </div>
+    </div>
+  </div>
+  <p class="footer-bottom">&copy; 2025 OCP - Projet IA</p>
+</footer>
+
+</body>
+</html>
