@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Mon Compte - Gestion de Stock{% endblock %}
+
+{% block content %}
+<div class="mon-compte-container">
+    <div class="compte-header">
+        <h1>Bienvenue, {{ user.email }} !</h1>
+        <a href="{{ url_for('logout') }}" class="btn-logout">Déconnexion</a>
+        {% if current_user.role == 'admin' %}
+            <a href="{{ url_for('dashboard') }}" class="btn-dashboard">Aller au dashboard</a>
+        {% endif %}
+
+    </div>
+
+    <div class="compte-actions">
+        <h2>Mes équipements</h2>
+        <p>Accédez à la liste complète de vos équipements ou ajoutez-en de nouveaux.</p>
+        <div class="btn-group">
+            <a href="{{ url_for('afficher_equipements') }}" class="btn-primary">Voir les équipements</a>
+            <a href="{{ url_for('ajouter_equipement') }}" class="btn-secondary">Ajouter un équipement</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

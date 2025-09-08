@@ -1,145 +1,261 @@
-from flask import request, render_template, redirect, url_for
-from .Database import get_db_connection
-from . import app
-from flask import jsonify, request
-from app.ML_model import predire_besoin
+# app/routes.py
+from flask import render_template, request, redirect, url_for, flash, jsonify,render_template
+from flask_login import login_user, logout_user, login_required, current_user
 from datetime import datetime
+from werkzeug.security import generate_password_hash
+
+from app import app
+from app.Database import get_db_connection
+from .Database import User          # ✅ IMPORTANT : le User vient de models, pas de Database
+from app.ML_model import predire_besoin
 
 
-
-UTILISATEUR_PAR_DEFAUT = "admin"
+# ------------------ PAGES PUBLIQUES ------------------
 
 @app.route('/')
 def accueil():
     return render_template('accueil.html')
 
+
+# ------------------ AUTH ------------------
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        email = request.form.get("email", "").strip()
+        password = request.form.get("password", "")
+
+        # Utiliser ton User.get_by_email
+        user = User.get_by_email(email)
+
+        if user and user.check_password(password):
+            login_user(user)
+
+            # Mettre à jour la dernière connexion
+            conn = get_db_connection()
+            cur = conn.cursor()
+            cur.execute("UPDATE Users SET last_login=%s WHERE id=%s", (datetime.now(), user.id))
+            conn.commit()
+            cur.close()
+            conn.close()
+            
+            if user.role == 'admin':
+                return redirect(url_for('dashboard'))
+            else:
+                return redirect(url_for('mon_compte'))
+        else:
+            flash("Email ou mot de passe incorrect")
+
+    return render_template("login.html")
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash("Vous êtes déconnecté.")
+    return redirect(url_for("login"))
+
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        email = request.form["email"].strip()
+        password = request.form["password"]
+
+        if User.get_by_email(email):
+            flash("Email déjà utilisé.")
+            return redirect(url_for("register"))
+
+        hashed_pw = generate_password_hash(password)
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("INSERT INTO Users (email, password_hash, role) VALUES (%s, %s, %s)",
+                    (email, hashed_pw, "user"))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        # --- Connexion automatique ---
+        user = User.get_by_email(email)
+        login_user(user)
+
+        flash("Inscription réussie ! Bienvenue !")
+        return redirect(url_for("mon_compte"))  # ou dashboard si admin
+
+    return render_template("register.html")
+
+
+# ------------------ PAGE UTILISATEUR ------------------
+
+@app.route("/mon_compte")
+@login_required
+def mon_compte():
+    return render_template("mon_compte.html", user=current_user)
+
+
+# ------------------ ADMIN DASHBOARD ------------------
+
+@app.route("/dashboard")
+@login_required
+def dashboard():
+    # Seul l'admin peut voir le dashboard
+    if getattr(current_user, "role", "user") != "admin":
+        return "Accès refusé", 403
+
+    conn = get_db_connection()
+    cur = conn.cursor(dictionary=True)
+    cur.execute("SELECT id, email, role, last_login FROM Users ORDER BY id")
+    users = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    return render_template("dashboard.html", users=users)
+
+
+# ------------------ EQUIPEMENTS (PROTÉGÉ) ------------------
+
 @app.route('/equipements', methods=['GET'])
+@login_required
 def afficher_equipements():
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM Equipements")
-    equipements = cursor.fetchall()
-    cursor.close()
+    cur = conn.cursor(dictionary=True)
+    cur.execute("SELECT * FROM Equipements")
+    equipements = cur.fetchall()
+    cur.close()
     conn.close()
     return render_template('equipements.html', equipements=equipements)
 
-@app.route('/ajouter_equipement', methods=['GET'])
-def formulaire_ajout():
-    return render_template('ajouter_equipement.html')
 
-@app.route('/ajouter_equipement', methods=['POST'])
+@app.route('/ajouter_equipement', methods=['GET', 'POST'])
+@login_required
 def ajouter_equipement():
+    if request.method == 'GET':
+        return render_template('ajouter_equipement.html')
+
+    # POST
     nom = request.form['nom']
     categorie = request.form['categorie']
     quantite = int(request.form['quantite'])
 
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cur = conn.cursor()
 
-    
-    cursor.execute("""
+    # 1) Ajouter l’équipement
+    cur.execute("""
         INSERT INTO Equipements (nom, categorie, quantite, date_ajout)
         VALUES (%s, %s, %s, CURDATE())
     """, (nom, categorie, quantite))
+    equipement_id = cur.lastrowid
 
-    equipement_id = cursor.lastrowid  
-
-    
-    cursor.execute("""
+    # 2) Journaliser le mouvement (utilisateur connecté)
+    nom_utilisateur = getattr(current_user, "username", "inconnu")
+    cur.execute("""
         INSERT INTO Mouvements (nom_utilisateur, Equipement_id, type_mouvement, quantite, date_mouvement)
         VALUES (%s, %s, 'entrée', %s, CURDATE())
-    """, (UTILISATEUR_PAR_DEFAUT, equipement_id, quantite))
+    """, (nom_utilisateur, equipement_id, quantite))
 
     conn.commit()
-    cursor.close()
+    cur.close()
     conn.close()
     return redirect(url_for('afficher_equipements'))
 
+
 @app.route('/modifier_equipement/<int:equipement_id>', methods=['GET', 'POST'])
+@login_required
 def modifier_equipement(equipement_id):
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cur = conn.cursor(dictionary=True)
 
     if request.method == 'POST':
         nom = request.form['nom']
         categorie = request.form['categorie']
         nouvelle_quantite = int(request.form['quantite'])
 
-        
-        cursor.execute("SELECT quantite FROM Equipements WHERE Equipement_id = %s", (equipement_id,))
-        ancienne = cursor.fetchone()
-        ancienne_quantite = ancienne['quantite'] if ancienne else 0
+        # Récupérer l’ancienne quantité
+        cur.execute("SELECT quantite FROM Equipements WHERE Equipement_id = %s", (equipement_id,))
+        row = cur.fetchone()
+        ancienne_quantite = row['quantite'] if row else 0
 
-        
-        cursor.execute("""
+        # Mettre à jour l’équipement
+        cur.execute("""
             UPDATE Equipements
             SET nom = %s, categorie = %s, quantite = %s
             WHERE Equipement_id = %s
         """, (nom, categorie, nouvelle_quantite, equipement_id))
 
-        #
+        # Enregistrer le mouvement si variation
         difference = nouvelle_quantite - ancienne_quantite
         if difference != 0:
             type_mouvement = 'entrée' if difference > 0 else 'sortie'
-            cursor.execute("""
+            nom_utilisateur = getattr(current_user, "username", "inconnu")
+            cur.execute("""
                 INSERT INTO Mouvements (nom_utilisateur, Equipement_id, type_mouvement, quantite, date_mouvement)
                 VALUES (%s, %s, %s, %s, CURDATE())
-            """, (UTILISATEUR_PAR_DEFAUT, equipement_id, type_mouvement, abs(difference)))
+            """, (nom_utilisateur, equipement_id, type_mouvement, abs(difference)))
 
         conn.commit()
-        cursor.close()
+        cur.close()
         conn.close()
         return redirect(url_for('afficher_equipements'))
 
-    else:  
-        cursor.execute("SELECT * FROM Equipements WHERE Equipement_id = %s", (equipement_id,))
-        equipement = cursor.fetchone()
-        cursor.close()
-        conn.close()
-        return render_template('modifier_equipement.html', equipement=equipement)
+    # GET : charger l’équipement
+    cur.execute("SELECT * FROM Equipements WHERE Equipement_id = %s", (equipement_id,))
+    equipement = cur.fetchone()
+    cur.close()
+    conn.close()
+    return render_template('modifier_equipement.html', equipement=equipement)
 
-@app.route('/supprimer_equipement/<int:equipement_id>', methods=['GET'])
+
+@app.route('/supprimer_equipement/<int:equipement_id>', methods=['POST'])
+@login_required
 def supprimer_equipement(equipement_id):
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cur = conn.cursor()
 
-   
-    cursor.execute("SELECT quantite FROM Equipements WHERE Equipement_id = %s", (equipement_id,))
-    result = cursor.fetchone()
+    # Récupérer la quantité pour journaliser la "sortie"
+    cur.execute("SELECT quantite FROM Equipements WHERE Equipement_id = %s", (equipement_id,))
+    result = cur.fetchone()
 
     if result:
-        quantite = result[0]  
+        quantite = result[0]
+        nom_utilisateur = getattr(current_user, "username", "inconnu")
 
-        
-        cursor.execute("""
+        cur.execute("""
             INSERT INTO Mouvements (nom_utilisateur, Equipement_id, type_mouvement, quantite, date_mouvement)
             VALUES (%s, %s, 'sortie', %s, CURDATE())
-        """, (UTILISATEUR_PAR_DEFAUT, equipement_id, quantite))
+        """, (nom_utilisateur, equipement_id, quantite))
 
-        
-        cursor.execute("DELETE FROM Equipements WHERE Equipement_id = %s", (equipement_id,))
+        cur.execute("DELETE FROM Equipements WHERE Equipement_id = %s", (equipement_id,))
 
     conn.commit()
-    cursor.close()
+    cur.close()
     conn.close()
     return redirect(url_for('afficher_equipements'))
 
 
+# ------------------ PRÉVISION (PROTÉGÉ) ------------------
+
+@app.route('/prevision', methods=['GET'])
+@login_required
+def page_prevision():
+    return render_template('prevision.html')
+
+
 @app.route('/prevoir_reapprovisionnement', methods=['POST'])
+@login_required
 def prevoir_reapprovisionnement():
     try:
         data = request.get_json()
         equipement_id = int(data.get('equipement_id'))
         date_future = data.get('date_future')
-        
 
         result = predire_besoin(equipement_id, date_future)
 
         if isinstance(result, str):
-            
             return jsonify({'error': result}), 400
 
-       
         return jsonify({
             'equipement_id': equipement_id,
             'date': date_future,
@@ -149,9 +265,16 @@ def prevoir_reapprovisionnement():
     except Exception as e:
         return jsonify({'error': f'Erreur serveur : {str(e)}'}), 500
 
-    
-@app.route('/prevision', methods=['GET'])
-def page_prevision():
-    return render_template('prevision.html')
 
+# ------------------ RECHERCHE (peut rester public si tu veux) ------------------
 
+@app.route("/search_equipement")
+def search_equipement():
+    query = request.args.get("query", "")
+    conn = get_db_connection()
+    cur = conn.cursor(dictionary=True)
+    cur.execute("SELECT nom FROM Equipements WHERE nom LIKE %s LIMIT 5", (f"%{query}%",))
+    result = cur.fetchall()
+    cur.close()
+    conn.close()
+    return jsonify([row["nom"] for row in result])

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Admin{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>Dashboard Admin</h1>
+        <p>Connecté en tant que : <strong>{{ current_user.email }}</strong></p>
+        <a href="{{ url_for('logout') }}" class="btn-logout">Déconnexion</a>
+    </div>
+
+    <div class="users-grid">
+        {% for user in users %}
+        <div class="user-card">
+            <h3>{{ user.email }}</h3>
+            <p>Rôle : <span class="role">{{ user.role|capitalize }}</span></p>
+            <p>Dernière connexion : {{ user.last_login }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

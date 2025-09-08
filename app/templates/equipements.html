@@ -3,7 +3,15 @@
 {% block content %}
 <div class="container-table">
     <h1>Liste des équipements</h1>
-    <a href="{{ url_for('formulaire_ajout') }}" class="btn-ajouter">Ajouter un équipement</a>
+
+    <!-- Champ de recherche moderne -->
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Rechercher un équipement..." autocomplete="off">
+        <i class="fas fa-search search-icon"></i>
+    </div>
+
+    <!-- Boutons existants -->
+    <a href="{{ url_for('ajouter_equipement') }}" class="btn-ajouter">Ajouter un équipement</a>
     <a href="{{ url_for('page_prevision') }}" class="btn btn-ajouter">Prévision</a>
 
     <table>
@@ -38,5 +46,58 @@
         </tbody>
     </table>
 </div>
+
+<!-- Script pour filtrage du tableau -->
+<script>
+document.getElementById("search").addEventListener("input", function() {
+    let filter = this.value.toLowerCase();
+    let rows = document.querySelectorAll("table tbody tr");
+
+    rows.forEach(row => {
+        let text = row.textContent.toLowerCase();
+        if (text.includes(filter)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+});
+</script>
+
+<!-- Style moderne pour le champ de recherche -->
+<style>
+.search-container {
+    position: relative;
+    width: 250px;
+    margin: 20px 0;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 10px 40px 10px 15px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    background-color: #f5f5f5;
+    font-size: 1em;
+    transition: all 0.3s;
+}
+
+.search-container input:focus {
+    outline: none;
+    border-color: #0D3B66;
+    background-color: #e8f0ff;
+    box-shadow: 0 0 5px rgba(13,59,102,0.3);
+}
+
+.search-container .search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #0D3B66;
+    pointer-events: none;
+    font-size: 1.1em;
+}
+</style>
 {% endblock %}
 

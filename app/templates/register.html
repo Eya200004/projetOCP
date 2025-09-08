@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Inscription - Gestion de Stock{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <h1>Créer un compte</h1>
+        <form method="POST">
+            <input type="text" name="username" placeholder="Nom d'utilisateur" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Mot de passe" required>
+            <button type="submit" class="btn-auth">S'inscrire</button>
+        </form>
+        <p>Vous avez déjà un compte ? <a href="{{ url_for('login') }}">Connectez-vous ici</a></p>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <p class="flash-message">{{ messages[0] }}</p>
+            {% endif %}
+        {% endwith %}
+    </div>
+</div>
+{% endblock %}

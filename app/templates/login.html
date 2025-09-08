@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Connexion - Gestion de Stock{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <h1>Connexion</h1>
+        <form method="POST">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Mot de passe" required>
+            <button type="submit" class="btn-auth">Se connecter</button>
+        </form>
+        <p>Pas encore de compte ? <a href="{{ url_for('register') }}">Inscrivez-vous ici</a></p>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <p class="flash-message">{{ messages[0] }}</p>
+            {% endif %}
+        {% endwith %}
+    </div>
+</div>
+{% endblock %}
+
