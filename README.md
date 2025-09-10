@@ -1,0 +1,1 @@
+This project is a web-based IT stock management system designed for OCP. It helps track, manage, and forecast the inventory of IT equipment such as computers, monitors, and cables. The application uses Python (Flask) for the backend, HTML/CSS for the frontend, and integrates machine learning to predict future stock needs based on historical movemen
