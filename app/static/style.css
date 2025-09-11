@@ -1010,6 +1010,10 @@ section {
     font-size: 1.5rem;
     margin-bottom: 10px;
     color: #1E90FF;
+    word-wrap: break-word;   
+    overflow-wrap: break-word;
+    white-space: normal;     
+    max-width: 100%;         
 }
 
 .user-card p {

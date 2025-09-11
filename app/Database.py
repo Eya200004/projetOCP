@@ -18,7 +18,6 @@ class User(UserMixin):
         self.role = role
 
     def get_id(self):
-        # Flask-Login s'attend à une string
         return str(self.id)
 
     @staticmethod
@@ -56,7 +55,7 @@ class User(UserMixin):
         """Crée un utilisateur et renvoie son id."""
         conn = get_db_connection()
         cursor = conn.cursor()
-        pw_hash = generate_password_hash(password)   # <-- importé ici
+        pw_hash = generate_password_hash(password)  
         cursor.execute(
             "INSERT INTO Users (email, password_hash, role) VALUES (%s, %s, %s)",
             (email, pw_hash, role)

@@ -7,7 +7,12 @@
         <h1 class="headline-1">Optimisez, prévoyez, contrôlez</h1>
         <h1 class="headline-2">Votre parc informatique</h1>
         <p>Une plateforme intelligente pour suivre, prévoir et gérer votre matériel informatique au sein d'OCP.</p>
-        <a href="{{ url_for('login') }}" class="btn-primary">Se Connecter</a>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('logout') }}" class="btn-primary">Déconnexion</a>
+        {% else %}
+            <a href="{{ url_for('login') }}" class="btn-primary">Se Connecter</a>
+        {% endif %}
+
     </div>
 </section>
 

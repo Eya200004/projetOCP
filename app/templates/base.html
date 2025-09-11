@@ -10,7 +10,6 @@
 <body>
 
 <div class="page-container">
-    <!-- HEADER -->
     <header id="header">
         <div class="header-container">
             <div class="left-header">
@@ -49,7 +48,8 @@
                 <ul>
                     <li><a href="/">Accueil</a></li>
                     <li><a href="{{ url_for('ajouter_equipement') }}">Ajouter équipement</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="mailto:support-it@ocp.ma">Contact</a></li>
+
                 </ul>
             </div>
             <div class="footer-social">
@@ -64,11 +64,11 @@
         <p class="footer-bottom">&copy; 2025 OCP - Projet IA</p>
     </footer>
 
-    <!-- BOUTON SCROLL TOP -->
+    
     <button id="scrollTopBtn"><i class="fas fa-arrow-up"></i></button>
 </div>
 
-<!-- JS: HEADER DISPARAÎT ET SCROLL TOP -->
+
 <script>
     const header = document.getElementById("header");
     const scrollBtn = document.getElementById("scrollTopBtn");
@@ -77,7 +77,6 @@
     window.onscroll = function() {
         let currentScrollPos = window.pageYOffset;
 
-        // Header qui disparaît
         if (prevScrollPos > currentScrollPos) {
             header.style.top = "0";
         } else {

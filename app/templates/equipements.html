@@ -4,13 +4,13 @@
 <div class="container-table">
     <h1>Liste des équipements</h1>
 
-    <!-- Champ de recherche moderne -->
+    <
     <div class="search-container">
         <input type="text" id="search" placeholder="Rechercher un équipement..." autocomplete="off">
         <i class="fas fa-search search-icon"></i>
     </div>
 
-    <!-- Boutons existants -->
+    
     <a href="{{ url_for('ajouter_equipement') }}" class="btn-ajouter">Ajouter un équipement</a>
     <a href="{{ url_for('page_prevision') }}" class="btn btn-ajouter">Prévision</a>
 
@@ -47,7 +47,7 @@
     </table>
 </div>
 
-<!-- Script pour filtrage du tableau -->
+
 <script>
 document.getElementById("search").addEventListener("input", function() {
     let filter = this.value.toLowerCase();
@@ -64,7 +64,7 @@ document.getElementById("search").addEventListener("input", function() {
 });
 </script>
 
-<!-- Style moderne pour le champ de recherche -->
+
 <style>
 .search-container {
     position: relative;
