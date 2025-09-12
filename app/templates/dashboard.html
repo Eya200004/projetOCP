@@ -12,13 +12,18 @@
 
     <div class="users-grid">
         {% for user in users %}
-        <div class="user-card">
-            <h3>{{ user.email }}</h3>
-            <p>Rôle : <span class="role">{{ user.role|capitalize }}</span></p>
-            <p>Dernière connexion : {{ user.last_login }}</p>
-        </div>
+            <div class="user-card">
+                <div class="user-card-content">
+                    <h3>{{ user.email }}</h3>
+                    <p>Rôle : <span class="role">{{ user.role|capitalize }}</span></p>
+                </div>
+                <div class="last-login">
+                    🕒 Dernière connexion : {{ user.last_login }}
+                </div>
+            </div>
         {% endfor %}
     </div>
 </div>
 {% endblock %}
+
 

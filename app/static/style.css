@@ -813,7 +813,7 @@ section {
 }
 
 
-/* Container général pour auth */
+
 .auth-container {
     min-height: 80vh;
     display: flex;
@@ -824,9 +824,9 @@ section {
     font-family: 'Inter', sans-serif;
 }
 
-/* Carte d'inscription/connexion */
+
 .auth-card {
-    background: #ffffffdd; /* léger transparent */
+    background: #ffffffdd; 
     padding: 40px 35px;
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
@@ -837,14 +837,14 @@ section {
     overflow: hidden;
 }
 
-/* Titres */
+
 .auth-card h1 {
     font-size: 2.5rem;
     margin-bottom: 25px;
     color: #0d3b66;
 }
 
-/* Inputs */
+
 .auth-card input {
     width: 100%;
     padding: 12px 15px;
@@ -861,7 +861,7 @@ section {
     box-shadow: 0 0 8px rgba(13, 59, 102, 0.2);
 }
 
-/* Bouton */
+
 .btn-auth {
     width: 100%;
     padding: 12px;
@@ -879,7 +879,7 @@ section {
     background-color: #074074;
 }
 
-/* Liens et messages */
+
 .auth-card p {
     margin-top: 15px;
     font-size: 0.95rem;
@@ -896,14 +896,14 @@ section {
     text-decoration: underline;
 }
 
-/* Flash messages */
+
 .flash-message {
     color: #ff4b5c;
     margin-top: 10px;
     font-weight: 500;
 }
 
-/* Motifs décoratifs */
+
 .auth-container::before {
     content: "";
     position: absolute;
@@ -942,7 +942,7 @@ section {
     background: #187bcd;
 }
 
-/* Conteneur principal */
+
 .dashboard-container {
     max-width: 1200px;
     margin: 40px auto;
@@ -950,7 +950,7 @@ section {
     font-family: 'Inter', sans-serif;
 }
 
-/* Header du dashboard */
+
 .dashboard-header {
     display: flex;
     flex-direction: column;
@@ -961,7 +961,7 @@ section {
 
 .dashboard-header h1 {
     font-size: 3rem;
-    color: #1E90FF; /* bleu principal */
+    color: #1E90FF; 
     margin-bottom: 10px;
 }
 
@@ -985,20 +985,27 @@ section {
     background: #450dfc;
 }
 
-/* Grille des utilisateurs */
+
 .users-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
 }
 
-/* Carte utilisateur */
+
 .user-card {
     background: linear-gradient(145deg, #f0f8ff, #e6f2ff);
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.1);
     transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 180px;
 }
 
 .user-card:hover {
@@ -1006,19 +1013,28 @@ section {
     box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
-.user-card h3 {
-    font-size: 1.5rem;
+
+.user-card-content {
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    padding-bottom: 8px;
     margin-bottom: 10px;
-    color: #1E90FF;
-    word-wrap: break-word;   
-    overflow-wrap: break-word;
-    white-space: normal;     
-    max-width: 100%;         
 }
 
-.user-card p {
+
+.user-card-content h3 {
+    font-size: 1.2rem;
+    color: #1E90FF;
+    margin: 0 0 10px 0;
+}
+
+
+.user-card-content p {
     font-size: 1rem;
     color: #333;
+    margin: 0;
+    display: inline-block;
 }
 
 .user-card .role {
@@ -1026,3 +1042,32 @@ section {
     color: #1E90FF;
 }
 
+
+.user-card-content::-webkit-scrollbar {
+    height: 6px;
+}
+.user-card-content::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, #1E90FF, #00BFFF);
+    border-radius: 4px;
+}
+.user-card-content::-webkit-scrollbar-track {
+    background: #e6f2ff;
+    border-radius: 4px;
+}
+
+
+.last-login {
+    margin-top: auto;
+    padding-top: 10px;
+    font-size: 0.9rem;
+    color: #555;
+    border-top: 1px solid #d0e4ff;
+    text-align: right;
+    font-style: italic;
+    opacity: 0.85;
+    transition: opacity 0.3s;
+}
+
+.last-login:hover {
+    opacity: 1;
+}
