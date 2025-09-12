@@ -18,9 +18,9 @@
             </div>
             <nav class="main-nav">
                 <a href="/">Accueil</a>
-                <a href="{{ url_for('ajouter_equipement') }}">Ajouter un équipement</a>
-                <a href="{{ url_for('afficher_equipements') }}">Liste des équipements</a>
                 {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('ajouter_equipement') }}">Ajouter un équipement</a>
+                    <a href="{{ url_for('afficher_equipements') }}">Liste des équipements</a>
                     <a href="{{ url_for('mon_compte') }}">Mon compte</a>
                     <a href="{{ url_for('logout') }}">Déconnexion</a>
                 {% else %}

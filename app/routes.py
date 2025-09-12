@@ -8,6 +8,10 @@ from app import app
 from app.Database import get_db_connection
 from .Database import User          
 from app.ML_model import predire_besoin
+from datetime import datetime, timezone
+now = datetime.now(timezone.utc)
+
+
 
 
 
@@ -71,22 +75,32 @@ def register():
         hashed_pw = generate_password_hash(password)
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("INSERT INTO Users (email, password_hash, role) VALUES (%s, %s, %s)",
-                    (email, hashed_pw, "user"))
+        cur.execute(
+            "INSERT INTO Users (email, password_hash, role) VALUES (%s, %s, %s)",
+            (email, hashed_pw, "user")
+        )
         conn.commit()
+
+        user = User.get_by_email(email)
+
+        now = datetime.now(timezone.utc)
+        cur.execute(
+            "UPDATE Users SET last_login = %s WHERE id = %s",
+            (now, user.id)
+        )
+        conn.commit()
+
         cur.close()
         conn.close()
 
-      
-        user = User.get_by_email(email)
-        login_user(user)
+        
+        user.last_login = now
 
+        login_user(user)
         flash("Inscription réussie ! Bienvenue !")
-        return redirect(url_for("mon_compte"))  
+        return redirect(url_for("mon_compte"))
 
     return render_template("register.html")
-
-
 #page utilisat
 
 @app.route("/mon_compte")
@@ -96,18 +110,19 @@ def mon_compte():
 
 
 # admin dashboard
-
 @app.route("/dashboard")
 @login_required
 def dashboard():
-    # Seul l'admin peut voir le dashboard
     if getattr(current_user, "role", "user") != "admin":
         return "Accès refusé", 403
 
     conn = get_db_connection()
     cur = conn.cursor(dictionary=True)
-    cur.execute("SELECT id, email, role, last_login FROM Users ORDER BY id")
-    users = cur.fetchall()
+    cur.execute("SELECT id, email, password_hash, role, last_login FROM Users ORDER BY id")
+    rows = cur.fetchall()
+    users = [User(
+        row['id'], row['email'], row['password_hash'], row['role'], row['last_login']
+    ) for row in rows]
     cur.close()
     conn.close()
 
