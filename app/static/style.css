@@ -1074,3 +1074,77 @@ section {
 .last-login:hover {
     opacity: 1;
 }
+
+/*boutton de suppression */
+
+.user-card form {
+    display: block;
+    margin-top: 12px;  
+    padding: 0;
+    text-align: right;
+
+    background: none;   
+    border: none;       
+}
+
+.btn-delete {
+    padding: 4px 12px;
+    border: 1.8px solid #e74c3c;
+    background: none;          
+    color: #e74c3c;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    
+    appearance: none;       
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+}
+
+.user-card form {
+    display: block;
+    margin-top: 12px;   
+    padding: 0;
+    text-align: right;
+
+    background: none;   
+    border: none;       
+}
+
+.btn-delete {
+    padding: 4px 12px;
+    border: 1.8px solid #e74c3c;
+    background: none;          
+    color: #e74c3c;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    appearance: none;       
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+}
+
+.btn-delete:hover {
+    background-color: #e74c3c;
+    color: #fff;
+}
+
+.btn-delete:focus,
+.btn-delete:active {
+    outline: none;         
+    box-shadow: none;      
+}
+
+
+.btn-delete:focus,
+.btn-delete:active {
+    outline: none;         
+    box-shadow: none;      
+}

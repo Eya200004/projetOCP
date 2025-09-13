@@ -128,6 +128,31 @@ def dashboard():
 
     return render_template("dashboard.html", users=users)
 
+# supprimer un user
+@app.route('/delete_user/<int:user_id>', methods=['POST'])
+@login_required
+def delete_user(user_id):
+    # Vérifie que seul un admin peut supprimer
+    if current_user.role != "admin":
+        flash("Accès refusé : seuls les administrateurs peuvent supprimer des utilisateurs.", "danger")
+        return redirect(url_for('dashboard'))
+
+    user = User.get_by_id(user_id)
+    if not user:
+        flash("Utilisateur introuvable.", "warning")
+        return redirect(url_for('dashboard'))
+
+    # Empêche la suppression de soi-même (optionnel)
+    if user.id == current_user.id:
+        flash("Vous ne pouvez pas vous supprimer vous-même.", "danger")
+        return redirect(url_for('dashboard'))
+
+    # Supprimer de la base de donnée
+    User.delete(user_id)
+
+    flash(f"L'utilisateur {user.email} a été supprimé.", "success")
+    return redirect(url_for('dashboard'))
+
 
 # equipement(PROTÉGÉ)
 @app.route('/equipements', methods=['GET'])

@@ -94,4 +94,15 @@ class User(UserMixin):
         cursor.close()
         conn.close()
         self.last_login = now
+    
+    @staticmethod
+    def delete(user_id):
+        """Supprimer un utilisateur par son ID."""
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM Users WHERE id = %s", (user_id,))
+        conn.commit()
+        cursor.close()
+        conn.close()
+
 

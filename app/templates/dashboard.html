@@ -21,6 +21,10 @@
                     🕒 Dernière connexion : 
                     {{ user.last_login.strftime('%d/%m/%Y %H:%M') if user.last_login else "Jamais" }}
                 </div>
+                <!-- Bouton supprimer -->
+                <form action="{{ url_for('delete_user', user_id=user.id) }}" method="POST" onsubmit="return confirm('Voulez-vous vraiment supprimer cet utilisateur ?');">
+                    <button type="submit" class="btn-delete">❌ Supprimer</button>
+                </form>
             </div>
         {% endfor %}
     </div>
