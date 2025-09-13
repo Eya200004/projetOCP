@@ -15,14 +15,14 @@ now = datetime.now(timezone.utc)
 
 
 
-
+#page d'acceuil
 @app.route('/')
 def accueil():
     return render_template('accueil.html')
 
 
 
-
+#page login
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -61,7 +61,7 @@ def logout():
     return redirect(url_for("login"))
 
 
-
+#page register
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -101,8 +101,8 @@ def register():
         return redirect(url_for("mon_compte"))
 
     return render_template("register.html")
-#page utilisat
 
+#page utilisat
 @app.route("/mon_compte")
 @login_required
 def mon_compte():
@@ -130,7 +130,6 @@ def dashboard():
 
 
 # equipement(PROTÉGÉ)
-
 @app.route('/equipements', methods=['GET'])
 @login_required
 def afficher_equipements():
@@ -250,7 +249,6 @@ def supprimer_equipement(equipement_id):
 
 
 #prevision (PROTÉGÉ) 
-
 @app.route('/prevision', methods=['GET'])
 @login_required
 def page_prevision():
@@ -281,7 +279,6 @@ def prevoir_reapprovisionnement():
 
 
 # recherche(peut rester public si tu veux)
-
 @app.route("/search_equipement")
 def search_equipement():
     query = request.args.get("query", "")

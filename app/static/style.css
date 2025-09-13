@@ -13,8 +13,7 @@ body {
 }
 
 
-/* --- HEADER PRINCIPAL --- */
-/* ---------- HEADER ---------- */
+/* header */
 header {
     position: fixed;
     top: 0;
@@ -26,20 +25,23 @@ header {
     transition: top 0.3s;
 }
 
+
 .header-container {
-    max-width: 1200px;
+    width: 100%;
     margin: 0 auto;
     padding: 0 30px;
     display: flex;
     align-items: center;
-    justify-content: space-between; /* espace entre logo et navs */
+    justify-content: space-between; 
     height: 60px;
 }
+
 
 .left-header {
     display: flex;
     align-items: center;
-    gap: 8px; /* espace entre logo et titre */
+    gap: 10px; 
+    margin-left: 0; 
 }
 
 .logo {
@@ -54,10 +56,11 @@ header {
     white-space: nowrap;
 }
 
-/* Bloc navs à droite */
+/* Navigation à droite */
 .main-nav {
     display: flex;
-    gap: 15px; /* espace entre chaque lien */
+    gap: 20px; 
+    margin-left: auto; 
 }
 
 .main-nav a {
@@ -76,7 +79,7 @@ header {
     color: #fff;
 }
 
-/* ---------- BOUTON SCROLL TOP ---------- */
+/*boutton */
 #scrollTopBtn {
     display: none;
     position: fixed;
@@ -101,13 +104,13 @@ header {
 
 /* ---------- MAIN ---------- */
 main {
-    padding-top: 70px; /* pour header fixe */
+    padding-top: 70px; 
     font-family: 'Inter', sans-serif;
 }
 
 
 
-/* ---------- Responsive ---------- */
+/*Responsive*/
 @media (max-width: 768px) {
     .header-container {
         flex-direction: column;
@@ -163,7 +166,7 @@ main {
     margin-bottom: 30px;
 }
 
-/* Button reste inchangé */
+
 .btn-primary {
     background: linear-gradient(to right, #FAA916, #FFCA3A);
     color: white;
@@ -189,7 +192,7 @@ main {
     100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Flex pour que le footer reste en bas */
+
 html, body {
     height: 100%;
     margin: 0;
@@ -198,11 +201,11 @@ html, body {
 .page-container {
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* occupe toute la hauteur */
+    min-height: 100vh; 
 }
 
 .content-wrap {
-    flex: 1; /* pousse le footer vers le bas */
+    flex: 1; 
 }
 
 /* Footer existant */
