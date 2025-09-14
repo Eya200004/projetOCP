@@ -246,7 +246,7 @@ def modifier_equipement(equipement_id):
     return render_template('modifier_equipement.html', equipement=equipement)
 
 
-@app.route('/supprimer_equipement/<int:equipement_id>', methods=['POST'])
+@app.route('/supprimer_equipement/<int:equipement_id>', methods=['POST','GET'])
 @login_required
 def supprimer_equipement(equipement_id):
     conn = get_db_connection()
