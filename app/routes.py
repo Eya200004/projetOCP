@@ -129,7 +129,7 @@ def dashboard():
     return render_template("dashboard.html", users=users)
 
 # supprimer un user
-@app.route('/delete_user/<int:user_id>', methods=['POST'])
+@app.route('/delete_user/<int:user_id>', methods=['POST','GET'])
 @login_required
 def delete_user(user_id):
     # Vérifie que seul un admin peut supprimer
