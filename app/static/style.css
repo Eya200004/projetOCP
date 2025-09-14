@@ -849,7 +849,7 @@ section {
 }
 
 
-
+/* register page */
 .auth-container {
     min-height: 80vh;
     display: flex;
@@ -978,7 +978,7 @@ section {
     background: #187bcd;
 }
 
-
+/*dashboard*/
 .dashboard-container {
     max-width: 1200px;
     margin: 40px auto;
